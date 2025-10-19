@@ -17,9 +17,7 @@ const upload = multer({ storage });
 // Upload endpoint
 app.post("/upload", upload.single("file"), (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-  
-  // Cloudinary returns secure_url
-  res.json({ url: req.file.path });
+  res.json({ url: req.file.path }); // Cloudinary returns secure_url
 });
 
 // Optional: List uploaded images
@@ -28,7 +26,7 @@ app.get("/images", async (req, res) => {
     const result = await cloudinary.api.resources({
       type: "upload",
       prefix: "my-images",
-      max_results: 100, // adjust as needed
+      max_results: 100,
     });
 
     const urls = result.resources.map((r) => r.secure_url);
@@ -39,5 +37,10 @@ app.get("/images", async (req, res) => {
   }
 });
 
+// ✅ Health check / root route
+app.get("/", (req, res) => {
+  res.send("✅ Image Manager Backend is running successfully!");
+});
+
 // Start server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
